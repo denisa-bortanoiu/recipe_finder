@@ -16,6 +16,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<String>{
     public static final String SEARCH_RESULTS = "com.example.recipefinder.extra.SEARCH_RESULTS";
     private EditText mSearchQuery;
+    private boolean isLoaded = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +50,7 @@ public class MainActivity extends AppCompatActivity
 
     public void searchRecipes(View view) {
         String searchQuery = mSearchQuery.getText().toString();
+        mSearchQuery.setText("");
         InputMethodManager inputManager = (InputMethodManager)
                 getSystemService(Context.INPUT_METHOD_SERVICE);
 
@@ -67,6 +70,7 @@ public class MainActivity extends AppCompatActivity
             Bundle queryBundle = new Bundle();
             queryBundle.putString("queryString", searchQuery);
             LoaderManager.getInstance(this).restartLoader(0, queryBundle, this);
+            isLoaded = true;
 
             Snackbar.make(view, R.string.search_loading, Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
@@ -118,9 +122,12 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onLoadFinished(@NonNull Loader<String> loader, String data) {
-        Intent intent = new Intent(MainActivity.this, ListRecipesActivity.class);
-        intent.putExtra(SEARCH_RESULTS, data);
-        startActivity(intent);
+        if (isLoaded) {
+            Intent intent = new Intent(MainActivity.this, ListRecipesActivity.class);
+            intent.putExtra(SEARCH_RESULTS, data);
+            startActivity(intent);
+            isLoaded = false;
+        }
     }
 
     @Override
