@@ -8,9 +8,9 @@
     tools:context=".ListRecipesActivity"
     tools:showIn="@layout/activity_list_recipes">
 
-    <TextView
-        android:id="@+id/result"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recipes_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:layout_height="wrap_content">
+    </androidx.recyclerview.widget.RecyclerView>
 </androidx.core.widget.NestedScrollView>
