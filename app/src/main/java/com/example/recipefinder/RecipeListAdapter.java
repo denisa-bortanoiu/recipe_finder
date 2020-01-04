@@ -1,6 +1,8 @@
 package com.example.recipefinder;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +13,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import java.util.LinkedList;
 
 public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.RecipeViewHolder> {
@@ -19,9 +23,10 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
     private LayoutInflater mInflater;
 
 
-    class RecipeViewHolder extends RecyclerView.ViewHolder {
+    class RecipeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public final TextView mTitle;
         public final TextView mIngredients;
+        public final TextView href;
         public final Button mLink;
         final RecipeListAdapter mAdapter;
 
@@ -30,7 +35,22 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
             mTitle = itemView.findViewById(R.id.recipe_title);
             mIngredients = itemView.findViewById(R.id.recipe_ingredients);
             mLink = itemView.findViewById(R.id.recipe_link);
+            href = itemView.findViewById(R.id.recipe_href);
+            mLink.setOnClickListener(this);
             mAdapter = adapter;
+        }
+
+        @Override
+        public void onClick(View view) {
+            String url = href.getText().toString();
+            Uri webpage = Uri.parse(url);
+            Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
+            if (intent.resolveActivity(view.getContext().getPackageManager()) != null) {
+                view.getContext().startActivity(intent);
+            } else {
+                Snackbar.make(view, R.string.no_open_link, Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
         }
 
     }
@@ -49,18 +69,14 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
 
     @Override
     public void onBindViewHolder(@NonNull RecipeListAdapter.RecipeViewHolder holder, int position) {
-        Log.d(LOG_TAG, "POSITION" + position);
         Recipe mCurrent = mRecipeList.get(position);
         holder.mTitle.setText(mCurrent.title);
         holder.mIngredients.setText(mCurrent.ingredients);
-        holder.mLink.setText("Recipe");
-        Log.d(LOG_TAG, mCurrent.toString());
-
+        holder.href.setText(mCurrent.href);
     }
 
     @Override
     public int getItemCount() {
-        Log.d(LOG_TAG, "COUNT:" + mRecipeList.size());
         return mRecipeList.size();
     }
 }
