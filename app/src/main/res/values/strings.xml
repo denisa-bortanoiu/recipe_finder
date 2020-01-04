@@ -5,4 +5,10 @@
     <string name="search_query_hint">french omelet</string>
     <string name="onion">onion</string>
     <string name="ingredients_help">Search only for recipes with these ingredients:</string>
+    <string name="title_activity_list_recipes">ListRecipesActivity</string>
+    <string name="no_results">No results found.</string>
+    <string name="action_settings">Settings</string>
+    <string name="search_loading">Searching...</string>
+    <string name="no_search_term">Please enter a search term.</string>
+    <string name="no_network">Please check your network connection and try again.</string>
 </resources>
