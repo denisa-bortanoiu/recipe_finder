@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.recipefinder.MainActivity">
+    <item
+        android:id="@+id/action_favourites"
+        android:orderInCategory="10"
+        android:title="@string/action_favourites"
+        android:icon="@drawable/ic_favourites"
+        app:showAsAction="ifRoom" />
+</menu>

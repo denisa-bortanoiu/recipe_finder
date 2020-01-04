@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Recipe Finder</string>
+    <string name="action_favourites">Favourites</string>
+    <string name="search_help">Search for recipes:</string>
+    <string name="search_query_hint">french omelet</string>
+    <string name="onion">onion</string>
+    <string name="ingredients_help">Search only for recipes with these ingredients:</string>
+</resources>
