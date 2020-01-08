@@ -15,4 +15,6 @@
     <string name="recipe_button">Recipe</string>
     <string name="placeholder_food">food image</string>
     <string name="search_results">Search Results</string>
+    <string name="favorited_message">Recipe added to favourites.</string>
+    <string name="unfavorited_message">Recipe removed from favourites.</string>
 </resources>

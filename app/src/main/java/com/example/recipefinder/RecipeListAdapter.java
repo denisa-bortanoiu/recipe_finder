@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -28,6 +29,8 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
         public final TextView mIngredients;
         public final TextView href;
         public final Button mLink;
+        public final ImageView mFavouriteStatus;
+        private boolean isFavourited = false;
         final RecipeListAdapter mAdapter;
 
         public RecipeViewHolder(View itemView, RecipeListAdapter adapter) {
@@ -37,6 +40,25 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
             mLink = itemView.findViewById(R.id.recipe_link);
             href = itemView.findViewById(R.id.recipe_href);
             mLink.setOnClickListener(this);
+            mFavouriteStatus = itemView.findViewById(R.id.favourite_status);
+            mFavouriteStatus.setClickable(true);
+            mFavouriteStatus.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (isFavourited) {
+                        isFavourited = false;
+                        mFavouriteStatus.setImageResource(R.drawable.ic_favourite_border);
+                        Snackbar.make(v, R.string.unfavorited_message, Snackbar.LENGTH_SHORT)
+                                .setAction("Action", null).show();
+                    } else {
+                        isFavourited = true;
+                        mFavouriteStatus.setImageResource(R.drawable.ic_favourite_filled);
+                        Snackbar.make(v, R.string.favorited_message, Snackbar.LENGTH_SHORT)
+                                .setAction("Action", null).show();
+                    }
+                }
+            });
+
             mAdapter = adapter;
         }
 
