@@ -64,9 +64,9 @@ public class ListRecipesActivity extends AppCompatActivity {
 
                 try {
                     Recipe recipe = new Recipe(
-                        jsonRecipe.getString("title"),
-                        jsonRecipe.getString("href"),
-                        jsonRecipe.getString("ingredients")
+                        jsonRecipe.getString("title").trim(),
+                        jsonRecipe.getString("href").trim(),
+                        jsonRecipe.getString("ingredients").trim()
                     );
                     recipes.addLast(recipe);
 
