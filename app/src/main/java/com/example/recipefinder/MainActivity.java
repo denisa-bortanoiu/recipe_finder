@@ -77,7 +77,6 @@ public class MainActivity extends AppCompatActivity
                     } else {
                         chosenIngredients.add(ingredient);
                     }
-                    Log.d("DENISA", chosenIngredients.toString());
                 }
             });
             chipGroup.addView(mChip);
