@@ -6,6 +6,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -16,12 +18,18 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity
@@ -29,6 +37,12 @@ public class MainActivity extends AppCompatActivity
     public static final String SEARCH_RESULTS = "com.example.recipefinder.extra.SEARCH_RESULTS";
     private EditText mSearchQuery;
     private boolean isLoaded = false;
+    private List<String> commonIngredients = Arrays.asList(
+            "chicken", "beef", "fish",
+            "egg", "milk", "cheese",
+            "onion", "tomato", "pepper", "carrot", "celery", "lemon",
+            "potato", "pasta", "rice");
+    private ArrayList<String> chosenIngredients = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +60,28 @@ public class MainActivity extends AppCompatActivity
                 searchRecipes(view);
             }
         });
+
+        // load chips with common ingredients
+        ChipGroup chipGroup = findViewById(R.id.ingredient_chip_group);
+        for (int i = 0; i < commonIngredients.size(); i++) {
+            Chip mChip = (Chip) getLayoutInflater().inflate(R.layout.chip_filter, null, false);
+            mChip.setText(commonIngredients.get(i));
+            mChip.setClickable(true);
+            mChip.setCheckable(true);
+            mChip.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    String ingredient = compoundButton.getText().toString();
+                    if (chosenIngredients.contains(ingredient)) {
+                        chosenIngredients.remove(ingredient);
+                    } else {
+                        chosenIngredients.add(ingredient);
+                    }
+                    Log.d("DENISA", chosenIngredients.toString());
+                }
+            });
+            chipGroup.addView(mChip);
+        }
     }
 
     public void searchRecipes(View view) {
@@ -66,9 +102,10 @@ public class MainActivity extends AppCompatActivity
         }
 
         if (networkInfo != null && networkInfo.isConnected()
-                && searchQuery.length() != 0) {
+                && (searchQuery.length() != 0 || chosenIngredients.size() != 0)) {
             Bundle queryBundle = new Bundle();
             queryBundle.putString("queryString", searchQuery);
+            queryBundle.putStringArrayList("ingredientList", chosenIngredients);
             LoaderManager.getInstance(this).restartLoader(0, queryBundle, this);
             isLoaded = true;
 
@@ -76,7 +113,7 @@ public class MainActivity extends AppCompatActivity
                     .setAction("Action", null).show();
 
         } else {
-            if (searchQuery.length() == 0) {
+            if (searchQuery.length() == 0 || chosenIngredients.size() == 0) {
                 Snackbar.make(view, R.string.no_search_term, Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             } else {
@@ -113,11 +150,16 @@ public class MainActivity extends AppCompatActivity
     @Override
     public Loader<String> onCreateLoader(int id, @Nullable Bundle args) {
         String queryString = "";
+        String ingredients = "";
         if (args != null) {
             queryString = args.getString("queryString");
+            ArrayList<String> ingredientList = args.getStringArrayList("ingredientList");
+            if (ingredientList != null) {
+                ingredients = TextUtils.join(",", ingredientList);
+            }
         }
 
-        return new RecipeLoader(this, queryString);
+        return new RecipeLoader(this, queryString, ingredients);
     }
 
     @Override

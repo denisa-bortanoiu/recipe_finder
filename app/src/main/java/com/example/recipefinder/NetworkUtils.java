@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 
 public class NetworkUtils {
@@ -17,7 +18,7 @@ public class NetworkUtils {
     private static final String QUERY_PARAM = "q";
     private static final String INGREDIENT_PARAM = "i";
 
-    static String getRecipesInfo(String queryString) {
+    static String getRecipesInfo(String queryString, String ingredients) {
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
         String recipeJSONString = null;
@@ -25,6 +26,7 @@ public class NetworkUtils {
         try {
             Uri builtURI = Uri.parse(BOOK_BASE_URL).buildUpon()
                     .appendQueryParameter(QUERY_PARAM, queryString)
+                    .appendQueryParameter(INGREDIENT_PARAM, ingredients)
                     .build();
             URL requestURL = new URL(builtURI.toString());
 

@@ -8,16 +8,18 @@ import androidx.loader.content.AsyncTaskLoader;
 
 public class RecipeLoader extends AsyncTaskLoader<String> {
     private String mQueryString;
+    private String mIngredients;
 
-    public RecipeLoader(@NonNull Context context, String queryString) {
+    public RecipeLoader(@NonNull Context context, String queryString, String ingredients) {
         super(context);
         mQueryString = queryString;
+        mIngredients = ingredients;
     }
 
     @Nullable
     @Override
     public String loadInBackground() {
-        return NetworkUtils.getRecipesInfo(mQueryString);
+        return NetworkUtils.getRecipesInfo(mQueryString, mIngredients);
     }
 
     @Override

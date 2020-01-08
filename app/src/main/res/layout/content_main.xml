@@ -46,6 +46,7 @@
         app:layout_constraintTop_toBottomOf="@+id/searchQuery" />
 
     <com.google.android.material.chip.ChipGroup
+        android:id='@+id/ingredient_chip_group'
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
@@ -59,16 +60,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ingredient_help"
         app:layout_constraintVertical_bias="1.0">
-
-        <com.google.android.material.chip.Chip
-            android:id="@+id/onion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checkable="true"
-            android:text="@string/onion"
-            app:chipStyle="@style/Widget.MaterialComponents.Chip.Filter"
-            android:textSize="16sp" />
-
 
     </com.google.android.material.chip.ChipGroup>
 

@@ -9,7 +9,7 @@
     <string name="no_results">No results found.</string>
     <string name="action_settings">Settings</string>
     <string name="search_loading">Searching…</string>
-    <string name="no_search_term">Please enter a search term.</string>
+    <string name="no_search_term">Please enter a search term or pick at least one ingredient.</string>
     <string name="no_network">Please check your network connection and try again.</string>
     <string name="no_open_link">Cannot open link.</string>
     <string name="recipe_button">Recipe</string>
