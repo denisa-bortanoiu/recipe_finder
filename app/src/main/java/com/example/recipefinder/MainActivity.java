@@ -19,7 +19,6 @@ import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;

@@ -18,4 +18,5 @@
     <string name="favorited_message">Recipe added to favourites.</string>
     <string name="unfavorited_message">Recipe removed from favourites.</string>
     <string name="favourites">Your Favourites</string>
+    <string name="your_favourites">Your Favourites</string>
 </resources>
