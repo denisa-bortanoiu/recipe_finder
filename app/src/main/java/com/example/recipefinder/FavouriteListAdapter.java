@@ -10,50 +10,40 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 
-import java.util.LinkedList;
+import java.util.List;
 
-public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.RecipeViewHolder> {
-    private final LinkedList<Recipe> mRecipeList;
-    private LayoutInflater mInflater;
+public class FavouriteListAdapter extends RecyclerView.Adapter<FavouriteListAdapter.FavouriteViewHolder> {
+
+    private final LayoutInflater mInflater;
+    private List<Favourite> mFavourites;
     private FavouriteViewModel mFavouriteViewModel;
 
-
-    class RecipeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class FavouriteViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        // not very smart because I'm basically duplicating code from RecipeViewHolder
+        // but can't think now of a method to make this better
         public final TextView mTitle;
         public final TextView mIngredients;
         public final TextView href;
         public final Button mLink;
         public final ImageView mFavouriteStatus;
-        private boolean isFavourited = false;
         Favourite mFavourite;
-        final RecipeListAdapter mAdapter;
+        final FavouriteListAdapter mAdapter;
 
         public void onFavourite(View v) {
             mFavourite = new Favourite(
                     href.getText().toString(),
                     mTitle.getText().toString(),
                     mIngredients.getText().toString());
-            if (isFavourited) {
-                isFavourited = false;
-                mFavouriteViewModel.delete(mFavourite);
-                mFavouriteStatus.setImageResource(R.drawable.ic_favourite_border);
-                Snackbar.make(v, R.string.unfavorited_message, Snackbar.LENGTH_SHORT)
-                        .setAction("Action", null).show();
-            } else {
-                isFavourited = true;
-                mFavouriteViewModel.insert(mFavourite);
-                mFavouriteStatus.setImageResource(R.drawable.ic_favourite_filled);
-                Snackbar.make(v, R.string.favorited_message, Snackbar.LENGTH_SHORT)
-                        .setAction("Action", null).show();
-            }
+            mFavouriteViewModel.delete(mFavourite);
+            Snackbar.make(v, R.string.unfavorited_message, Snackbar.LENGTH_SHORT)
+                    .setAction("Action", null).show();
         }
 
-        public RecipeViewHolder(View itemView, RecipeListAdapter adapter) {
+        public FavouriteViewHolder(View itemView, FavouriteListAdapter adapter) {
             super(itemView);
             mTitle = itemView.findViewById(R.id.recipe_title);
             mIngredients = itemView.findViewById(R.id.recipe_ingredients);
@@ -62,6 +52,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
             mLink.setOnClickListener(this);
             mFavouriteStatus = itemView.findViewById(R.id.favourite_status);
             mFavouriteStatus.setClickable(true);
+            mFavouriteStatus.setImageResource(R.drawable.ic_favourite_filled);
             mFavouriteStatus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -84,32 +75,40 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
                         .setAction("Action", null).show();
             }
         }
-
     }
 
-    public RecipeListAdapter(Context context, LinkedList<Recipe> recipeList, FavouriteViewModel viewModel) {
+    FavouriteListAdapter(Context context, FavouriteViewModel viewModel) {
         mInflater = LayoutInflater.from(context);
-        this.mRecipeList = recipeList;
-        this.mFavouriteViewModel = viewModel;
-    }
-
-    @NonNull
-    @Override
-    public RecipeListAdapter.RecipeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View mItemView = mInflater.inflate(R.layout.recipe_item, parent, false);
-        return new RecipeViewHolder(mItemView, this);
+        mFavouriteViewModel = viewModel;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecipeListAdapter.RecipeViewHolder holder, int position) {
-        Recipe mCurrent = mRecipeList.get(position);
-        holder.mTitle.setText(mCurrent.title);
-        holder.mIngredients.setText(mCurrent.ingredients);
-        holder.href.setText(mCurrent.href);
+    public FavouriteListAdapter.FavouriteViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView = mInflater.inflate(R.layout.recipe_item, parent, false);
+        return new FavouriteViewHolder(itemView, this);
     }
 
+    @Override
+    public void onBindViewHolder(FavouriteViewHolder holder, int position) {
+        if (mFavourites != null) {
+            Favourite current = mFavourites.get(position);
+            holder.mTitle.setText(current.getTitle());
+            holder.mIngredients.setText(current.getIngredients());
+            holder.href.setText(current.getHref());
+        }
+    }
+
+    void setFavourites(List<Favourite> favourites){
+        mFavourites = favourites;
+        notifyDataSetChanged();
+    }
+
+    // getItemCount() is called many times, and when it is first called,
+    // mWords has not been updated (means initially, it's null, and we can't return null).
     @Override
     public int getItemCount() {
-        return mRecipeList.size();
+        if (mFavourites != null)
+            return mFavourites.size();
+        else return 0;
     }
 }
